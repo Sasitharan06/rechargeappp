@@ -13,16 +13,25 @@ const RechargePlans = () => {
   const [plansData, setPlansData] = useState([])
   const [category, setCategory] = useState('All')
   const [selectedPlan, setSelectedPlan] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   // Fetch plans from backend
   useEffect(() => {
     const fetchPlans = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`${config.API_URL}/plans/AIRTEL`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         setPlansData(data);
       } catch (error) {
         console.error("Error fetching plans:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -72,6 +81,9 @@ const RechargePlans = () => {
             <div>
               <p className="text-sm text-gray-600">Choose a plan that fits you</p>
               <h2 className="text-2xl font-bold text-airtel-dark">All Plans</h2>
+              {loading && <p>Loading plans...</p>}
+              {error && <p className="text-red-500">Error: {error}</p>}
+              {!loading && !error && plansData.length === 0 && <p>No plans found.</p>}
             </div>
             <div className="flex gap-2 bg-airtel-light p-1 rounded-xl flex-wrap">
               {categories.map((cat) => (
