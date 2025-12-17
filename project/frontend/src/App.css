@@ -1,0 +1,8 @@
+/* Scoped styles for layout scaffolding; most styling via Tailwind */
+.app-shell {
+  @apply min-h-screen flex flex-col bg-airtel-light;
+}
+
+.app-main {
+  @apply flex-1;
+}
